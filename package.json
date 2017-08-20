@@ -21,7 +21,12 @@
     "@angular/platform-browser": "^4.2.4",
     "@angular/platform-browser-dynamic": "^4.2.4",
     "@angular/router": "^4.2.4",
+    "@swimlane/ngx-charts": "^6.0.1",
+    "@swimlane/ngx-charts-dag": "^2.1.4",
+    "@swimlane/ngx-dnd": "^3.0.0",
+    "@swimlane/ngx-ui": "^18.0.4",
     "core-js": "^2.4.1",
+    "d3": "^4.10.0",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
   },
@@ -44,6 +49,6 @@
     "protractor": "~5.1.2",
     "ts-node": "~3.2.0",
     "tslint": "~5.3.2",
-    "typescript": "~2.3.3"
+    "typescript": "^2.4.2"
   }
 }

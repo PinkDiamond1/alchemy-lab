@@ -1,0 +1,173 @@
+@import "../../node_modules/@swimlane/ngx-ui/release/styles/colors/index.scss";
+
+.page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #e8e8e8;
+  background-image: url(../assets/bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  font-family: Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif; 
+}
+
+.header {
+  background-color: black;
+  color: $color-light-blue-100;
+  text-align:center;
+  padding: 5px 0;
+  opacity: 0.8;
+}
+
+.workspace {
+  color: $color-light-blue-100;
+  text-align: center;
+}
+
+.builder-source {
+  padding: 0 5px 0 15px;
+  height: 100%;
+  background-color: $color-grey-700;
+  opacity: 0.9;
+}
+
+.split-handle {
+  background-color: $color-grey-700;
+  opacity: 0.9;
+}
+
+.builder-target {
+  background-color: $color-grey-800;
+  opacity: 0.9;
+  padding: 15px 20px;
+  position: relative;
+}
+
+.ngx-dnd-container {
+  height: calc(100% - 100px);
+  overflow-y: auto;
+  border: none !important;
+  margin: 0;
+  padding: 0;
+}
+
+.ngx-dnd-item {
+  box-shadow: 0 2px 5px 0 rgba(52, 47, 51, 0.63);
+  text-align: center;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: black;
+  transition: opacity 0.4s ease-in-out;
+  border: 1px solid lightblue;
+  display: block;
+  color: $color-light-blue-100;
+  opacity: 0.7;
+
+  &:not(.has-handle):not(.move-disabled),
+  &.has-handle [ngxdraghandle],
+  &.has-handle [ngxDragHandle] {
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+  }
+
+  .ngx-dnd-content {
+    user-select: none;
+  }
+
+  &:hover {
+    border: 1px solid blue;
+  }
+}
+
+.gu-mirror {
+  position: fixed !important;
+  margin: 0 !important;
+  z-index: 9999 !important;
+  opacity: 0.8;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+  filter: alpha(opacity=80);
+}
+.gu-hide {
+  display: none !important;
+}
+.gu-unselectable {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+}
+.gu-transit {
+  opacity: 0.2;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
+  filter: alpha(opacity=20);
+}
+
+.ngx-dnd-container {
+  &.gu-empty {
+    border: 2px dotted red;
+  }
+
+  .ex-moved {
+    background-color: #e74c3c;
+  }
+
+  .ex-over {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+ngx-tooltip-content .tooltip-content {
+  text-align: center;
+  background: #cfcfcf;
+
+  hr {
+    margin: 3px 0;
+    border-top: 1px solid #8c8b8b;
+    text-align: center;
+  }
+  hr:after {
+    content: '§';
+    display: inline-block;
+    position: relative;
+    top: -10px;
+    padding: 0;
+    background: #cfcfcf;
+    font-size: 14px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+  }
+}
+
+.directed-graph {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.start-help {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0.5;
+}

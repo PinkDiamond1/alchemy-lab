@@ -1,5 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { NgxUIModule } from '@swimlane/ngx-ui';
+import { NgxDnDModule } from '@swimlane/ngx-dnd';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxChartsDagModule } from '@swimlane/ngx-charts-dag';
 
 import { AppComponent } from './app.component';
 
@@ -8,7 +14,12 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    NgxUIModule,
+    NgxDnDModule,
+    BrowserAnimationsModule,
+    NgxChartsModule,
+    NgxChartsDagModule
   ],
   providers: [],
   bootstrap: [AppComponent]
