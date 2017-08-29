@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { NotificationService } from '@swimlane/ngx-ui';
+import { Component, ViewEncapsulation, ViewChild, TemplateRef } from '@angular/core';
+import { NotificationService, Hotkey, HotkeysService, DrawerService } from '@swimlane/ngx-ui';
 import {
   trigger,
   state,
@@ -9,15 +9,23 @@ import {
 } from '@angular/animations';
 import * as shape from 'd3-shape';
 
-import { recipes, names } from '../recipies/littlealchemy';
+import { convertJSON, makeHash, makeId } from './utils/JSONconverter';
 
-function makeHash(input) {
-  return [...input].sort().join(' + ');
-}
+import littlealchemy from '../assets/JSONrecipes/com.sometimeswefly.littlealchemy.json';
+import doodlegod_hd_free2 from '../assets/JSONrecipes/joybits.doodlegod_hd_free2.json';
+import byril from '../assets/JSONrecipes/com.byril.alchemy.json';
+import doodledevil_free from '../assets/JSONrecipes/com.joybits.doodledevil_free.json';
+import Alchemy_Fusion_2 from '../assets/JSONrecipes/com.snowysapps.Alchemy_Fusion_2.json';
+import alchemyclassic from '../assets/JSONrecipes/com.niasoft.alchemyclassic.json';
 
-function makeId(input) {
-  return input.toLowerCase().replace(/\s/g, '');
-}
+const sets = {
+  'com.byril.alchemy': byril,
+  'joybits.doodlegod_hd_free2': doodlegod_hd_free2,
+  'com.joybits.doodledevil_free': doodledevil_free,
+  'com.snowysapps.Alchemy_Fusion_2': Alchemy_Fusion_2,
+  'com.sometimeswefly.littlealchemy': littlealchemy,
+  'com.niasoft.alchemyclassic': alchemyclassic
+};
 
 @Component({
   selector: 'app-root',
@@ -36,21 +44,20 @@ function makeId(input) {
 export class AppComponent {
   title = 'Alchemy Lab';
 
-  names = names;
+  sets = sets;
+  setNames = Object.keys(sets);
+  currentSet = 'com.sometimeswefly.littlealchemy';
+
+  names: any;
   filter = '';
 
-  orderableList = [
-    'Water',
-    'Fire',
-    'Earth',
-    'Air'
-  ].sort();
-  filteredItems = [...this.orderableList];
+  orderableList = [];
+  filteredItems = [];
 
   workbenchList = [];
 
-  recipies: any = recipes;
-  recipiesIndex: any = {};
+  recipes: any;
+  recipesIndex: any = {};
 
   hierarchialGraph = { links: [], nodes:  [] };
   curve: any = shape.curveBundle.beta(1);
@@ -63,21 +70,25 @@ export class AppComponent {
     ]
   };
 
-  constructor(private notificationService: NotificationService) {
-    this.recipies.forEach(r => {
-      r.hash = makeHash(r.ingredients);
-    });
-    this.updateGraph();
+  showAllGraph = false;
+
+  @ViewChild('editTmpl') editTmpl: TemplateRef<any>;
+
+  constructor(private notificationService: NotificationService, private drawerMngr: DrawerService) {
+    this.loadSet('com.sometimeswefly.littlealchemy');
   }
 
   updateGraph() {
-    const recepies = this.recipies.filter(r => r.found);
+    const recipes = this.showAllGraph ?
+      this.recipes.slice() :
+      this.recipes.filter(r => r.found);
+
     const nodes = this.orderableList;
 
     this.hierarchialGraph.nodes = <any>nodes.map(name => ({value: name, label: name, id: makeId(name)}));
     this.hierarchialGraph.links = [];
 
-    recepies.forEach(r => {
+    recipes.forEach(r => {
       r.ingredients.forEach(source => {
         r.results.forEach(target => {
           this.hierarchialGraph.links.push({
@@ -87,8 +98,6 @@ export class AppComponent {
         });
       });
     });
-
-    console.log(this.hierarchialGraph);
   }
 
   addItem(item) {
@@ -106,7 +115,7 @@ export class AppComponent {
 
   onChange(ev?: any) {
     const hashedInput = makeHash(this.workbenchList);
-    const result = this.recipies.find(f => {
+    const result = this.recipes.find(f => {
       return !f.found && f.hash === hashedInput;
     });
     if (result) {
@@ -118,10 +127,10 @@ export class AppComponent {
     result.found = true;
     this.workbenchList = [...result.results];
     result.results.forEach(r => {
-      if (!this.recipiesIndex[r]) {
-        this.recipiesIndex[r] = [result.hash];
+      if (!this.recipesIndex[r]) {
+        this.recipesIndex[r] = [result.hash];
       } else {
-        this.recipiesIndex[r].push(result.hash);
+        this.recipesIndex[r].push(result.hash);
       }
     });
     const items = result.results.filter(i => !this.orderableList.includes(i));
@@ -155,10 +164,47 @@ export class AppComponent {
     return this.filteredItems = this.orderableList.filter(v => v.toLowerCase().includes(value));
   }
 
-  getRecipies(item) {
-    if (this.recipiesIndex[item]) {
-      return item + '<hr />' + this.recipiesIndex[item].join('<br />');
+  getRecipes(item) {
+    if (this.recipesIndex[item]) {
+      return item + '<hr />' + this.recipesIndex[item].join('<br />');
     }
     return item;
+  }
+
+  @Hotkey('ctrl+s', 'Do some magic!')
+  onKey() {
+    this.showAllGraph = !this.showAllGraph;
+    this.updateGraph();
+  }
+
+  openDrawer(direction = 'left', size = 80) {
+    this.drawerMngr.create({
+      direction,
+      template: this.editTmpl,
+      size,
+      context: 'Alchemy Lab'
+    });
+  }
+
+  loadSet(key: string) {
+    this.currentSet = key;
+    const inputJSON = sets[key];
+    const { recipes, names } = convertJSON(inputJSON);
+    this.recipes = recipes;
+    this.names = names;
+
+    this.orderableList = [
+      'Water',
+      'Fire',
+      'Earth',
+      'Air'
+    ].sort();
+    this.filteredItems = [...this.orderableList];
+
+    this.updateGraph();
+  }
+
+  objectKeys(obj) {
+    return Object.keys(obj);
   }
 }

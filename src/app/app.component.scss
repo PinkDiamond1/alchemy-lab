@@ -171,3 +171,26 @@ ngx-tooltip-content .tooltip-content {
   pointer-events: none;
   opacity: 0.5;
 }
+
+ul.set-list {
+  list-style-type: none;
+
+  .set-list-item {
+    color: #b8eafe;
+    cursor: pointer;
+    background-color: black;
+    opacity: 0.5;
+    border: 1px solid lightblue;
+    padding: 0 20px;
+    margin: 10px;
+
+    &:hover {
+      border: 1px solid red;
+    }
+
+    &:active, &.active {
+      border: 1px solid red;
+      opacity: 1;
+    }
+  }
+}

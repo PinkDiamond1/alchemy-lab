@@ -3,6 +3,13 @@
     <div fxLayout="row" fxLayoutAlign="space-around stretch">
       <div fxFlex="0 0 300px">Discovered {{orderableList.length - 4}}/{{names.length - 4}}</div>
       <div fxFlex fxFlexFill>{{title}}</div>
+      <div fxFlex="0 0 300px">
+        <button
+          type="button"
+          (click)="openDrawer()">
+          {{currentSet}}
+        </button>
+      </div>
     </div>
   </div>
   <div class="workspace" fxFlex fxFlexFill fxLayout="row" ngxSplit="row">
@@ -21,7 +28,7 @@
           (dblclick)="addItem(item)"
           ngx-tooltip
           tooltipPlacement="right"
-          [tooltipTitle]="getRecipies(item)"
+          [tooltipTitle]="getRecipes(item)"
           [@fadeIn]="'in'">
           {{item}}
         </div>
@@ -73,3 +80,20 @@
   </div>
 </div>
 
+<hotkeys></hotkeys>
+
+<ng-template #editTmpl>
+  <ngx-toolbar
+    [title]="'Alchemy Lab'">
+  </ngx-toolbar>
+  <section class="section">
+    <ul class="set-list">
+      <li class="set-list-item" *ngFor="let setName of setNames" (click)="loadSet(setName)" [ngClass]="{active: setName === currentSet}">
+        <h3>{{setName}}</h3>
+        <p>
+          Items: {{objectKeys(sets[setName].names).length}}, Recipes: {{objectKeys(sets[setName].recipes).length}}
+        </p>
+      </li>
+    </ul>
+  </section>
+</ng-template>
